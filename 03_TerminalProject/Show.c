@@ -17,9 +17,9 @@ void draw_win(WINDOW* win, char* text, size_t offset, int line_nmb, int height) 
         /* '%.6s' print 6 chars of string
            len of printing string is constant
            and equals ~to the number of columns because
-           line_nmb from 0 to 99999 (hold from 1 to 5 positions)
+           line_nmb from 1 to 99999 (hold from 1 to 5 positions)
         */
-        wprintw(win, " %d: %.*s\n", line_nmb, COLS-3*DX+1-8, text + offset);
+        wprintw(win, " %d: %.*s\n", line_nmb+1, COLS-3*DX+1-8, text + offset);
         offset += (size_t)strlen(text + offset) + 1;
         line_nmb += 1;
         wrefresh(win);
@@ -84,7 +84,6 @@ int main (int argc, char* argv[])
     size_t offset = 0;
     int num_space_keys = 0;
     draw_win(win, text, offset, num_space_keys, min(num_lines, LINES-3*DX+1));
-    // printf("%d\n", (size_t)strlen(text + offset));
     offset += (size_t)strlen(text + offset) + 1;
     num_space_keys += 1;
 
