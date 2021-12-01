@@ -1,0 +1,24 @@
+b 8
+ignore 1 35
+commands 1
+    silent
+    delete
+    c
+end
+
+b 8
+ignore 2 27
+commands 2
+    silent
+    info locals
+    c
+end
+
+b range
+commands 3
+    silent
+    info args
+    c
+end
+
+run -100 100 3 > /dev/null

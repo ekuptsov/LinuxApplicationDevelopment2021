@@ -1,0 +1,14 @@
+b 8 if i%5 == 0
+commands 1
+    silent
+    info locals
+    c
+    end
+
+b range
+commands 2
+    silent
+    info args
+    c
+end
+run 1 12 > /dev/null
