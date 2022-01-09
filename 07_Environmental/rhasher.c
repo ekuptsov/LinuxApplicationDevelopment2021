@@ -20,12 +20,13 @@ int main(int argc, char* argv[]) {
     rhash_library_init();
 
 #ifdef WITH_READLINE
-    while ((line = readline("Enter a line: ")) != NULL) {
+    while ((line = readline("Input: ")) != NULL) {
 #else
     size_t len = 0;
     ssize_t nread;
     while ((nread = getline(&line, &len, stdin)) != -1) {
 #endif
+        if (line[0] == '\0') continue;
         hash_name = strtok(line, " ");
         hash_data = strtok(NULL, " ");
         if (!strcasecmp(hash_name, "MD5")) {
@@ -73,6 +74,6 @@ int main(int argc, char* argv[]) {
                           rhash_get_digest_size(hash_id), output_radix);
         printf("%s %s\n", rhash_get_name(hash_id), output);
     }
-    free(line);
+    if (line != NULL) free(line);
     return 0;
 }
