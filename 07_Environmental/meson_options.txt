@@ -1,0 +1,6 @@
+# https://mesonbuild.com/Build-options.html
+option('with_readline',
+       description: 'Use GNU Readline library to capture input',
+       type: 'boolean',
+       value: false,
+)

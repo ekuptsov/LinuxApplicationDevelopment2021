@@ -1,20 +1,16 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <errno.h>
 
 #include "rhash.h"
 
-// gcc -o rhasher rhasher.c  -L./RHash-master/librhash/ -lrhash
+#ifdef WITH_READLINE
+    #include "readline/readline.h"
+#endif
 
 int main(int argc, char* argv[]) {
-    // #ifdef READLINE
-    //     printf("readline\n");
-    // #else
-    //     printf("nothing\n");
-    // #endif
     char* line = NULL;
-    size_t len = 0;
-    ssize_t nread;
 
     char *hash_name, *hash_data;
     unsigned char digest[64];
@@ -23,7 +19,13 @@ int main(int argc, char* argv[]) {
 
     rhash_library_init();
 
+#ifdef WITH_READLINE
+    while ((line = readline("Enter a line: ")) != NULL) {
+#else
+    size_t len = 0;
+    ssize_t nread;
     while ((nread = getline(&line, &len, stdin)) != -1) {
+#endif
         hash_name = strtok(line, " ");
         hash_data = strtok(NULL, " ");
         if (!strcasecmp(hash_name, "MD5")) {
@@ -40,7 +42,10 @@ int main(int argc, char* argv[]) {
         int res;
         if (hash_data[0] == '"') {
             // hash string
-            res = rhash_msg(hash_id, hash_data, strlen(hash_data), digest);
+            int strl = strlen(hash_data) - 2;
+            // remove quotes from both sides
+            hash_data[strl + 1] = '\0';
+            res = rhash_msg(hash_id, &hash_data[1], strl, digest);
             if (res < 0) {
                 fprintf(stderr, "Message digest calculation error\n");
                 continue;
@@ -68,5 +73,6 @@ int main(int argc, char* argv[]) {
                           rhash_get_digest_size(hash_id), output_radix);
         printf("%s %s\n", rhash_get_name(hash_id), output);
     }
+    free(line);
     return 0;
 }
